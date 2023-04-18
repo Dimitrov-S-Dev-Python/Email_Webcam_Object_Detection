@@ -1,3 +1,4 @@
+import glob
 import cv2
 import time
 from send_email import send_email
@@ -7,7 +8,7 @@ time.sleep(1)
 
 first_frame = None
 status_list = []
-
+count = 1
 while True:
     status = 0
     check, frame = video.read()
@@ -32,7 +33,11 @@ while True:
         rectangle = cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
         if rectangle.any():
             status = 1
-            send_email()
+            cv2.imwrite(f"images/{count}image.png", frame)
+            count += 1
+            all_images = glob.glob("images/*.png")
+            index = len(all_images) // 2
+            image_with_object = all_images[index]
 
     status_list.append(status)
     status_list = status_list[-2:]

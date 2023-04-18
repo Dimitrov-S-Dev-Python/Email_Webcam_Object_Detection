@@ -43,7 +43,7 @@ while True:
     status_list = status_list[-2:]
     print(status_list)
     if status_list[0] == 1 and status_list[0] == 0:
-        send_email()
+        send_email(image_with_object)
 
     cv2.imshow("Video", frame)
     key = cv2.waitKey(1)

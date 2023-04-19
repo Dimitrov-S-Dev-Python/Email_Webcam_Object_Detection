@@ -3,9 +3,11 @@ import os
 import cv2
 import time
 from send_email import send_email
-import images
 
+# connect to default camera
+# (default webcam is 0)
 video = cv2.VideoCapture(0)
+
 time.sleep(1)
 
 first_frame = None
@@ -23,8 +25,11 @@ image_with_obj = ""
 
 while True:
     status = 0
+# read a frame from video stream
     check, frame = video.read()
+# convert the frame to grayscale
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+# apply background subtraction
     gray_frame_gau = cv2.GaussianBlur(gray_frame, (11, 11), 0)
 
     if first_frame is None:
@@ -36,10 +41,12 @@ while True:
     dil_frame = cv2.dilate(thresh_frame, None, iterations=2)
 
     contours, check = cv2.findContours(dil_frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
+# draw bounding boxes
     for contour in contours:
+        # ignore small contours
         if cv2.contourArea(contour) < 5_000:
             continue
+        # draw bounding box around contour
         x, y, w, h = cv2.boundingRect(contour)
         rectangle = cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
         if rectangle.any():
